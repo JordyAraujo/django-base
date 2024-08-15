@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "django-base"
+version = "0.1.0"
+description = ""
+authors = ["JordyAraujo <jordyaraujo@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^5.1"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.5.7"
+taskipy = "^1.13.0"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations', 'manage.py', 'settings.py']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.lint.pylint]
+max-args = 7
+max-positional-args = 7
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+run = 'python manage.py runserver'
+makemigrations = 'python manage.py makemigrations'
+migrate = 'python manage.py migrate'
+pre_test = 'task lint'
+test = 'pytest --cov=fast_zero -vv'
+post_test = 'coverage html'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
